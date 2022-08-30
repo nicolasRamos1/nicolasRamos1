@@ -1,0 +1,55 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[Serializable]
+public class Colores
+{
+    public string nombreColor;
+    public Color color;
+}
+public class ConfigGame : MonoBehaviour
+{
+    public static ConfigGame instance;
+    public List<Color> colorFiguras;
+    public string figura, colorSilueta, fondo;
+    public float tiempo;
+
+    public List<Colores> coloresPredefinidos;
+
+    public void SetColorFiguras(List<Color> colors)
+    {
+        colorFiguras = colors;
+        for (int i = 0; i < colors.Count; i++)
+        {
+            string txt = colors[i].r.ToString() + "|" + colors[i].g.ToString() + "|" + colors[i].b.ToString() + "|" + colors[i].a.ToString();
+            PlayerPrefs.SetString("ColorFiguras" + i, txt);
+        }
+        PlayerPrefs.SetInt("CantidadColoresFiguras", colors.Count);
+    }
+    public List<Color> GetColorFiguras()
+    {
+        List<Color> savedColors = new List<Color>();
+        for (int i = 0; i < PlayerPrefs.GetInt("CantidadColoresFiguras"); i++)
+        {
+            string[] coloresStrg = PlayerPrefs.GetString("ColorFiguras" + i).Split('|');
+            Color color = new Color(float.Parse(coloresStrg[0]), float.Parse(coloresStrg[1]), float.Parse(coloresStrg[2]), float.Parse(coloresStrg[3]));
+            savedColors.Add(color);
+        }
+        return savedColors;
+    }
+
+    private void Start()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+}
