@@ -1,0 +1,62 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class ApplyGameConfigs : MonoBehaviour
+{
+    public enum ModeStart { silueta,fichas}
+    public ModeStart mode = ModeStart.silueta;
+    
+    public List<Image> imagesFichas;
+    
+    bool aplicado;
+
+    public Image fondo;
+    public bool cargarConTiempo;
+
+    [Header("extra")]
+    [Tooltip("por si deja solo una escena este sera para siluetas")]
+    public List<Image> imagesSilueta = new List<Image>();//por si deja solo una escena este sera para siluetas
+    private void Update()
+    {
+        if (!aplicado)
+        {
+            switch (mode)
+            {
+                case ModeStart.silueta:
+                    for (int i = 0; i < imagesFichas.Count; i++)
+                    {
+                        imagesFichas[i].color = ConfigGame.instance.coloresPredefinidos.Find(x => x.nombreColor == ConfigGame.instance.colorSilueta).color;
+                        if (cargarConTiempo)
+                        {
+                            Invoke("CargarEscenaTimeEnd", ConfigGame.instance.tiempo);
+                        } 
+                    }
+                    break;
+                case ModeStart.fichas:
+
+                    for (int i = 0; i < imagesSilueta.Count; i++)
+                    {
+                        imagesFichas[i].color = ConfigGame.instance.coloresPredefinidos.Find(x => x.nombreColor == ConfigGame.instance.colorSilueta).color;
+                    }
+                    for (int i = 0; i < imagesFichas.Count; i++)
+                    {
+                        imagesFichas[i].color = ConfigGame.instance.colorFiguras[i];
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+            fondo.color = ConfigGame.instance.coloresPredefinidos.Find(x => x.nombreColor == ConfigGame.instance.fondo).color;
+            aplicado = true;
+        }    
+    }
+
+    void CargarEscenaTimeEnd()
+    {
+        SceneManager.LoadScene(ConfigGame.instance.figura);
+    }
+}
