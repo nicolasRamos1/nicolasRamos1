@@ -1,0 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ColorSelect : MonoBehaviour
+{
+    Color color;
+    int idImagen;
+    CanvasManager canvasManager;
+    public void StartComponent(Color color,int idImagen,CanvasManager canvasManager)
+    {
+        this.canvasManager = canvasManager;
+        this.color = color;
+        this.idImagen = idImagen;
+        gameObject.GetComponent<Image>().color = color;
+        gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        gameObject.GetComponent<Button>().onClick.AddListener(Seleccionar);
+    }
+    void Seleccionar()
+    {
+        canvasManager.SeleccionarColor(idImagen, color);
+    }
+}
