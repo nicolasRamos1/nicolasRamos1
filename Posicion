@@ -1,0 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Posicion : MonoBehaviour
+{
+    public Transform target;
+    Vector3 pInicial;
+    //[SerializeField]private float t =0.009f;
+    [SerializeField] private float speed = 1f;
+    float tiempo;
+    //float momInicio = float.MaxValue;
+    //float tiempoHasta=2f;
+
+    //public GameObject activar;
+    void Start()
+    {
+        Invoke("Play", delay);
+
+        tiempo = ConfigGame.instance.tiempo;
+        pInicial = transform.position;
+    }
+
+    public float delay = 1;
+    public bool play = false;
+    void Update()
+    {
+        if (play)
+        {
+            Mover();
+        }
+    }
+    void Play()
+    {
+        play = true;
+    }
+    void Mover()
+    {
+        Vector2 a = pInicial;
+        Vector2 b = target.position;
+        //transform.position = Vector2.MoveTowards(a, b, speed);
+
+        if (tiempo > 0)
+        {
+            tiempo -= 1f * Time.deltaTime;
+            float tNormalized = tiempo / ConfigGame.instance.tiempo;
+            transform.position = Vector3.Lerp(b, a, tNormalized);
+        }
+        if (tiempo == 0)
+        {
+            transform.position = Vector3.Lerp (b, a, 0);
+        }
+    }
+}
